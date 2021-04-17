@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Refresh_tockenController;
-use App\Http\Controllers\Insert_recordController;
+use App\Http\Controllers\ZohoCrmController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +15,12 @@ use App\Http\Controllers\Insert_recordController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('zoho');
 });
-Route::post('/result', [Refresh_tockenController::class, 'generate_refresh_tocken'])->name('contacts');
+
+// Zoho Auth
+Route::post('zohoauth', [ZohoCrmController::class, 'oauth'])->name('zohoauth');
+Route::get('zohotoken', [ZohoCrmController::class, 'generateToken'])->name('zohotoken');
+// Zoho Deal
+Route::get('deals', [ZohoCrmController::class, 'getDeals'])->name('deals');
+Route::post('adddeal', [ZohoCrmController::class, 'addDeal'])->name('adddeal');
