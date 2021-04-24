@@ -4,59 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ZohoCrmController extends Controller
+class ZohoDealController extends Controller
 {
-    public function oauth(Request $request)
-    {
-        $input = $request->all();
-        
-        \Session::put('client_id', $input['client_id']);
-        \Session::put('client_secret', $input['client_secret']);
-        \Session::put('redirect_uri', $input['redirect_uri']);
-
-        $redirectTo = 'https://accounts.zoho.com/oauth/v2/auth' . '?' . http_build_query(
-            [
-                'client_id' => $input['client_id'],
-                'redirect_uri' => $input['redirect_uri'],
-                'scope' => 'ZohoCRM.modules.all',
-                'response_type' => 'code',
-            ]);
-
-        return redirect($redirectTo);
-    }
-
-    public function generateToken(Request $request)
-    {
-        if (\Session::has('client_id') && \Session::has('client_secret') && \Session::has('redirect_uri')) {
-            $client_id = \Session::get('client_id');
-            $client_secret = \Session::get('client_secret');
-            $redirect_uri = \Session::get('redirect_uri');
-        }
-
-        $input = $request->all();
-
-        $tokenUrl = 'https://accounts.zoho.com/oauth/v2/token?code='.$input['code'].'&client_id='.$client_id.'&client_secret='.$client_secret.'&redirect_uri='.$redirect_uri.'&grant_type=authorization_code';
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_VERBOSE, 0);     
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);     
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);     
-        curl_setopt($curl, CURLOPT_TIMEOUT, 300);   
-        curl_setopt($curl, CURLOPT_POST, TRUE); 
-        curl_setopt($curl, CURLOPT_URL, $tokenUrl);     
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    
-        $result = curl_exec($curl);
-        curl_close($curl);
-        $tokenResult = json_decode($result);
-    
-        $this->writeTokenToFile($tokenResult->access_token);
-        
-        return redirect()->route('deals');
-    }
-
     public function getDeals()
     {
+        \Session::forget('auth_error');
+        
         try {
             $token = (string) \Storage::disk('local')->get('zoho_crm_token.txt');
         } catch (\Exception $e) {
@@ -110,7 +63,8 @@ class ZohoCrmController extends Controller
         $jsonResponse = json_decode($content, true);
 
         if (isset($jsonResponse['code']) && $jsonResponse['code'] == 'INVALID_TOKEN') {
-            \Session::put('error', 'Invalid token, try to reauth');
+            \Session::forget('auth_success');
+            \Session::put('auth_error', 'Invalid token, try to reauth');
             return redirect()->route('/');
         }
         
@@ -126,6 +80,9 @@ class ZohoCrmController extends Controller
 
     public function addDeal(Request $request)
     {
+        \Session::forget('success');
+        \Session::forget('error');
+        
         try {
             $token = (string) \Storage::disk('local')->get('zoho_crm_token.txt');
         } catch (\Exception $e) {
@@ -173,6 +130,7 @@ class ZohoCrmController extends Controller
         }
 
         if (isset($dealResponse->code) && $dealResponse->code == 'INVALID_TOKEN') {
+            \Session::forget('auth_success');
             \Session::put('error', 'Invalid token, try to reauth');
             return redirect()->route('/');
         }
@@ -185,15 +143,6 @@ class ZohoCrmController extends Controller
         } else {
             \Session::put('error', 'Deal not create, please try again!');
             return redirect()->route('deals');
-        }
-    }
-
-    private function writeTokenToFile(string $token)
-    {
-        try {
-            \Storage::put('zoho_crm_token.txt', $token);
-        } catch (\Exception $e) {
-            dd($e);
         }
     }
 }
