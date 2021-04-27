@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ZohoDealController extends Controller
+class ZohoDealController extends ZohoController
 {
     public function getDeals()
     {
@@ -13,69 +13,25 @@ class ZohoDealController extends Controller
         try {
             $token = (string) \Storage::disk('local')->get('zoho_crm_token.txt');
         } catch (\Exception $e) {
-            return redirect()->route('zoho');
+            \Session::forget('auth_success');
+            return redirect()->route('/');
         }
         
-        $curl_pointer = curl_init();
-        $curl_options = array();
         $url = "https://www.zohoapis.com/crm/v2/Deals?";
         $parameters = array();
-        // $parameters["page"] = "1";
-        // $parameters["per_page"] ="2";
+        $parameters['per_page'] = 5;
+        $headers = array();
+        $headers[] = "Authorization". ":" . "Zoho-oauthtoken " .$token;
+        
+        $result = $this->getData($url, $parameters, $headers);
 
-        foreach ($parameters as $key => $value) {
-            $url = $url.$key."=".$value."&";
-        }
-
-        $curl_options[CURLOPT_URL] = $url;
-        $curl_options[CURLOPT_RETURNTRANSFER] = true;
-        $curl_options[CURLOPT_HEADER] = 1;
-        $curl_options[CURLOPT_CUSTOMREQUEST] = "GET";
-        $headersArray = array();
-        $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken " .$token;
-
-        $curl_options[CURLOPT_HTTPHEADER] = $headersArray;
-        
-        curl_setopt_array($curl_pointer, $curl_options);
-        
-        $result = curl_exec($curl_pointer);
-        $responseInfo = curl_getinfo($curl_pointer);
-        
-        curl_close($curl_pointer);
-        
-        list ($headers, $content) = explode("\r\n\r\n", $result, 2);
-        
-        if(strpos($headers," 100 Continue")!==false) {
-            list( $headers, $content) = explode( "\r\n\r\n", $content , 2);
-        }
-        
-        $headerArray = (explode("\r\n", $headers, 50));
-        $headerMap = array();
-        
-        foreach ($headerArray as $key) {
-            if (strpos($key, ":") != false) {
-                $firstHalf = substr($key, 0, strpos($key, ":"));
-                $secondHalf = substr($key, strpos($key, ":") + 1);
-                $headerMap[$firstHalf] = trim($secondHalf);
-            }
-        }
-        
-        $jsonResponse = json_decode($content, true);
-
-        if (isset($jsonResponse['code']) && $jsonResponse['code'] == 'INVALID_TOKEN') {
+        if (isset($result['code']) && $result['code'] == 'INVALID_TOKEN') {
             \Session::forget('auth_success');
             \Session::put('auth_error', 'Invalid token, try to reauth');
             return redirect()->route('/');
         }
         
-        if ($jsonResponse == null && $responseInfo['http_code'] != 204) {
-            list ($headers, $content) = explode("\r\n\r\n", $content, 2);
-            $jsonResponse = json_decode($content, true);
-        }
-
-        $data = $jsonResponse['data'];
-
-        return view('deals', ['deals' => $data]);
+        return view('deals', ['deals' => $result['data']]);
     }
 
     public function addDeal(Request $request)
@@ -104,29 +60,15 @@ class ZohoDealController extends Controller
             $recordData['Account_Name'] = $accountName;
             $recordData['Amount'] = $amount;
             $recordData['Stage'] = $stage;
-
             $jsonData = json_encode($recordData);
             $data = "{\n    \"data\": [\n ".$jsonData."\n    ]\n}\n\n";
       
-            $curl = curl_init($serviceUrl);
-            curl_setopt($curl, CURLOPT_VERBOSE, 0);     
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);     
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);     
-            curl_setopt($curl, CURLOPT_TIMEOUT, 300);   
-            curl_setopt($curl, CURLOPT_POST, TRUE);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);     
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            $headers = array(
                 'Authorization: Zoho-oauthtoken ' . $token,
                 'Content-Type: application/json'
-            ));
+            );
       
-            $cResponse = curl_exec($curl);
-            curl_close($curl);
-
-            $dealResponse = json_decode($cResponse);
-
+            $dealResponse = $this->addData($serviceUrl, $data, $headers);
         }
 
         if (isset($dealResponse->code) && $dealResponse->code == 'INVALID_TOKEN') {

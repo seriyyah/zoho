@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ZohoAuthController extends Controller
+class ZohoAuthController extends ZohoController
 {
     public function view()
     {
@@ -44,18 +44,7 @@ class ZohoAuthController extends Controller
 
         $tokenUrl = 'https://accounts.zoho.com/oauth/v2/token?code='.$input['code'].'&client_id='.$client_id.'&client_secret='.$client_secret.'&redirect_uri='.$redirect_uri.'&grant_type=authorization_code';
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_VERBOSE, 0);     
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);     
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);     
-        curl_setopt($curl, CURLOPT_TIMEOUT, 300);   
-        curl_setopt($curl, CURLOPT_POST, TRUE); 
-        curl_setopt($curl, CURLOPT_URL, $tokenUrl);     
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    
-        $result = curl_exec($curl);
-        curl_close($curl);
-        $tokenResult = json_decode($result);
+        $tokenResult = $this->prepareData($tokenUrl);
 
         if (isset($tokenResult->error)) {
             \Session::put('auth_error', 'Invalid client secret');
