@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ZohoCrmController;
+use App\Http\Controllers\ZohoAuthController;
+use App\Http\Controllers\ZohoDealController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +15,11 @@ use App\Http\Controllers\ZohoCrmController;
 |
 */
 
-Route::get('/', function () {
-    return view('zoho');
-});
-
 // Zoho Auth
-Route::post('zohoauth', [ZohoCrmController::class, 'oauth'])->name('zohoauth');
-Route::get('zohotoken', [ZohoCrmController::class, 'generateToken'])->name('zohotoken');
+Route::get('/', [ZohoAuthController::class, 'view'])->name('/');
+Route::post('zohoauth', [ZohoAuthController::class, 'oauth'])->name('zohoauth');
+Route::get('zohotoken', [ZohoAuthController::class, 'generateToken'])->name('zohotoken');
+
 // Zoho Deal
-Route::get('deals', [ZohoCrmController::class, 'getDeals'])->name('deals');
-Route::post('adddeal', [ZohoCrmController::class, 'addDeal'])->name('adddeal');
+Route::get('deals', [ZohoDealController::class, 'getDeals'])->name('deals');
+Route::post('adddeal', [ZohoDealController::class, 'addDeal'])->name('adddeal');
