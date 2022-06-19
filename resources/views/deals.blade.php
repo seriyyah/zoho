@@ -16,17 +16,22 @@
 
             <h3 class="title mt-5">Add a deal</h3>
             <div class="mt-5">
-                @if(session()->has('success'))
-                    <div class="alert alert-success">
-                        {{ session()->get('success') }}
+                @if(session()->has('success_message'))
+                    <div class="alert alert-success" style="background:white">
+                        {{ session()->get('success_message') }}
                     </div>
                 @endif
-                @if(session()->has('error'))
+                @if(count($errors)>0)
                     <div class="alert alert-danger">
-                        {{ session()->get('error') }}
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
-                <form action="adddeal" method="post">
+                <form action="{{ route('add-deal') }}" method="post">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="deal_name">Deal Name</label>

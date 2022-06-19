@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: zoho_php_room
+    build: .
+    volumes:
+      - './:/usr/src/app'
+    depends_on:
+      - mysql
+
+  nginx:
+    container_name: zoho_nginx_room
+    image: nginx:1.19.6-alpine
+    volumes:
+      - './:/usr/src/app'
+      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+    ports:
+      - '8001:80'
+    depends_on:
+      - php
+
+  mysql:
+    platform: linux/x86_64
+    container_name: zoho_mysql_room
+    image: mysql:5.7
+    ports:
+      - "8002:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+
+  phpmyadmin:
+    container_name: zoho_phpmyadmin_room
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8003:80'
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306

@@ -16,10 +16,10 @@ use App\Http\Controllers\ZohoDealController;
 */
 
 // Zoho Auth
-Route::get('/', [ZohoAuthController::class, 'view'])->name('/');
-Route::post('zohoauth', [ZohoAuthController::class, 'oauth'])->name('zohoauth');
-Route::get('zohotoken', [ZohoAuthController::class, 'generateToken'])->name('zohotoken');
+Route::get('/', [ZohoAuthController::class, 'index'])->name('home');
+Route::post('zoho-auth', [ZohoAuthController::class, 'authZoho'])->name('zoho_auth');
+Route::get('zoho-token-generate', [ZohoAuthController::class, 'generateToken'])->name('zoho-token-generate');
 
 // Zoho Deal
 Route::get('deals', [ZohoDealController::class, 'getDeals'])->name('deals');
-Route::post('adddeal', [ZohoDealController::class, 'addDeal'])->name('adddeal');
+Route::post('add-deal', [ZohoDealController::class, 'addDeal'])->name('add-deal');

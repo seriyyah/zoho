@@ -2,67 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
-class ZohoAuthController extends ZohoController
+class ZohoAuthController extends Controller
 {
-    public function view()
+    public function index()
     {
         return view('zoho');
     }
-    
-    public function oauth(Request $request)
-    {
-        $input = $request->all();
-        
-        \Session::put('client_id', $input['client_id']);
-        \Session::put('client_secret', $input['client_secret']);
-        \Session::put('redirect_uri', $input['redirect_uri']);
 
+    public function authZoho()
+    {
         $redirectTo = 'https://accounts.zoho.com/oauth/v2/auth' . '?' . http_build_query(
-            [
-                'client_id' => $input['client_id'],
-                'redirect_uri' => $input['redirect_uri'],
-                'scope' => 'ZohoCRM.modules.all',
-                'response_type' => 'code',
-            ]);
+                [
+                    'client_id' => config('zoho.client_id'),
+                    'redirect_uri' => config('zoho.redirect_uri'),
+                    'scope' => config('zoho.oauth_scope'),
+                    'response_type' => config('zoho.response_type'),
+                ]);
 
         return redirect($redirectTo);
     }
 
-    public function generateToken(Request $request)
+    public function generateToken(Request $request): RedirectResponse
     {
-        \Session::forget('auth_error');
-        
-        if (\Session::has('client_id') && \Session::has('client_secret') && \Session::has('redirect_uri')) {
-            $client_id = \Session::get('client_id');
-            $client_secret = \Session::get('client_secret');
-            $redirect_uri = \Session::get('redirect_uri');
-        }
-
         $input = $request->all();
+        $client = new Client();
 
-        $tokenUrl = 'https://accounts.zoho.com/oauth/v2/token?code='.$input['code'].'&client_id='.$client_id.'&client_secret='.$client_secret.'&redirect_uri='.$redirect_uri.'&grant_type=authorization_code';
+        try {
+            $response = $client->request('POST', 'https://accounts.zoho.eu/oauth/v2/token?', [
+                'form_params' => [
+                    'code' => $input['code'],
+                    'client_id' => config('zoho.client_id'),
+                    'client_secret' => config('zoho.client_secret'),
+                    'redirect_uri' => config('zoho.redirect_uri'),
+                    'grant_type' => config('zoho.grant_type'),
+                ]
+            ]);
 
-        $tokenResult = $this->prepareData($tokenUrl);
+            $decode = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+            $this->writeTokenToFile($decode->access_token);
 
-        if (isset($tokenResult->error)) {
-            \Session::put('auth_error', 'Invalid client secret');
-        } else {
-            \Session::put('auth_success', 'Auth is success');
+        } catch (GuzzleException $e) {
         }
 
-        $this->writeTokenToFile($tokenResult->access_token);
-        
-        return redirect()->route('/');
+        return redirect()->route('home');
     }
 
     private function writeTokenToFile(string $token)
     {
         try {
-            \Storage::put('zoho_crm_token.txt', $token);
-        } catch (\Exception $e) {
-            dd($e);
+            Storage::put('zoho_crm_token.txt', $token);
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 }
