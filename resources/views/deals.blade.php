@@ -10,7 +10,7 @@
     <body>
         <div class="container">
             <div class="mt-5 text-right">
-                <a href="{{route('/')}}" class="btn btn-primary">Back</a>
+                <a href="{{route('home')}}" class="btn btn-primary">Back</a>
             </div>
             <h1 class="title mt-1 text-center">Deals</h1>
 
@@ -48,27 +48,6 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-
-            <h3 class="title mt-5 mb-5">Deals</h3>
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Deal Name</th>
-                        <th scope="col">Account Name</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($deals as $deal)
-                        <tr>
-                            <td>{{ $deal['Deal_Name'] }}</td>
-                            <td>{{ $deal['Account_Name']['name'] }}</td>
-                            <td>{{ $deal['Amount'] }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
         </div>
     </body>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
