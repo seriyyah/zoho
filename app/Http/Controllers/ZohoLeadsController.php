@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ZohoLeadsCreateRequest;
 use GuzzleHttp\Client;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,8 +38,8 @@ class ZohoLeadsController extends Controller
             ];
             $headers = [
                 'headers' => [
-                    'Authorization: Zoho-oauthtoken ' . $token,
-                    'Content-Type: application/json',
+                    'Authorization' => 'Zoho-oauthtoken ' . $token,
+                    'Content-Type' => 'application/json',
                 ],
             ];
             $client = new Client();
@@ -56,48 +55,8 @@ class ZohoLeadsController extends Controller
         return redirect()->route('edit-lead');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return view('edit-leads');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
