@@ -73,7 +73,6 @@ class ZohoDealController extends Controller
                 'Content-Type: application/json'
             );
 
-            $dealResponse = $this->addData($serviceUrl, $data, $headers);
 
             $client = new Client();
             $response = $client->request('post', $serviceUrl, [

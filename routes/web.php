@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ZohoLeadsController;
+use com\zoho\crm\api\record\Leads;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZohoAuthController;
 use App\Http\Controllers\ZohoDealController;
@@ -23,3 +25,10 @@ Route::get('zoho-token-generate', [ZohoAuthController::class, 'generateToken'])-
 // Zoho Deal
 Route::get('deals', [ZohoDealController::class, 'getDeals'])->name('deals');
 Route::post('add-deal', [ZohoDealController::class, 'addDeal'])->name('add-deal');
+
+//Zoho Leads
+Route::get('leads', [ZohoLeadsController::class, 'index'])->name('leads');
+Route::post('add-leads', [ZohoLeadsController::class, 'store'])->name('add-leads');
+Route::get('show-lead', [ZohoLeadsController::class, 'show'])->name('show-lead');
+Route::put('edit-lead', [ZohoLeadsController::class, 'update'])->name('edit-lead');
+Route::delete('destroy',[ZohoLeadsController::class, 'destroy'])->name('destroy-lead');

@@ -45,13 +45,16 @@ class ZohoAuthController extends Controller
                 ]
             ]);
 
-            $decode = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+            $decode = json_decode($response->getBody()->getContents(),
+                false, 512, JSON_THROW_ON_ERROR
+            );
             $this->writeTokenToFile($decode->access_token);
 
         } catch (GuzzleException $e) {
+            $e->getMessage();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('leads');
     }
 
     private function writeTokenToFile(string $token)

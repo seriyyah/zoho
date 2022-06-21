@@ -107,8 +107,17 @@ return [
     | - www.zohoapis.com.cn
     |
     */
-    'api_base_url' => env('ZOHO_API_BASE_URL', 'www.zohoapis.com'),
+    'api_base_url' => env('ZOHO_API_BASE_URL', 'https://www.zohoapis.eu'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Leads URL
+    |--------------------------------------------------------------------------
+    |
+    | URL to be used when calling an API. It denotes the domain of the user.
+    |
+    */
+    'api_leads_url' => env('ZOHO_API_LEADS_URL', '/crm/v2/Leads'),
     /*
     |--------------------------------------------------------------------------
     | API VERSION

@@ -4,8 +4,72 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9808e910698c368d4a800f4d9fdf1847",
+    "content-hash": "5a0be5ebc0d17124eb167acaae187966",
     "packages": [
+        {
+            "name": "asciisd/zoho",
+            "version": "v1.2.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/asciisd/zoho.git",
+                "reference": "2399759c35f1077dbbdc7fe43683fd6acb17d5dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/asciisd/zoho/zipball/2399759c35f1077dbbdc7fe43683fd6acb17d5dc",
+                "reference": "2399759c35f1077dbbdc7fe43683fd6acb17d5dc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/support": "^7.0|^8.0|^9.0",
+                "nesbot/carbon": "^2.0",
+                "php": "^7.2|^8.0",
+                "zohocrm/php-sdk-archive": "^2.2"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^4.0|^5.0",
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "suggest": {
+                "ext-intl": "Allows for more locales besides the default \"en\" when formatting money values."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Asciisd\\Zoho\\Providers\\ZohoServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Asciisd\\Zoho\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Amr Ahmed",
+                    "email": "aemad@asciisd.com"
+                }
+            ],
+            "description": "Asciisd Zoho provide an elegant and easy way to communicate with Zoho CRM.",
+            "keywords": [
+                "Zoho",
+                "crm",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/asciisd/zoho/issues",
+                "source": "https://github.com/asciisd/zoho"
+            },
+            "time": "2022-03-22T10:42:44+00:00"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",
@@ -4908,6 +4972,92 @@
                 "source": "https://github.com/zoho/zohocrm-php-sdk/tree/3.0.2"
             },
             "time": "2021-03-02T16:14:45+00:00"
+        },
+        {
+            "name": "zohocrm/php-sdk-2.0",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoho/zohocrm-php-sdk-2.0.git",
+                "reference": "1d181440bc657775c791894d0cc14106d2390b51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoho/zohocrm-php-sdk-2.0/zipball/1d181440bc657775c791894d0cc14106d2390b51",
+                "reference": "1d181440bc657775c791894d0cc14106d2390b51",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=5.7"
+            },
+            "type": "sdk",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Zoho CRM API Team",
+                    "email": "support@zohocrm.com",
+                    "homepage": "https://www.zoho.com/crm/help/customer-support.html",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Zoho CRM API SDK for PHP",
+            "homepage": "https://github.com/zoho/zohocrm-php-sdk-2.0",
+            "support": {
+                "source": "https://github.com/zoho/zohocrm-php-sdk-2.0/tree/4.0.0"
+            },
+            "time": "2021-09-02T11:51:41+00:00"
+        },
+        {
+            "name": "zohocrm/php-sdk-archive",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoho/zcrm-php-sdk.git",
+                "reference": "b389382181b87d96a4c2cf331a315bd868e90249"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoho/zcrm-php-sdk/zipball/b389382181b87d96a4c2cf331a315bd868e90249",
+                "reference": "b389382181b87d96a4c2cf331a315bd868e90249",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=5.7"
+            },
+            "type": "sdk",
+            "autoload": {
+                "psr-4": {
+                    "zcrmsdk\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Zoho CRM API Team",
+                    "email": "support@zohocrm.com",
+                    "homepage": "https://www.zoho.com/crm/help/customer-support.html",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Zoho CRM API SDK for PHP",
+            "homepage": "https://github.com/zoho/zcrm-php-sdk",
+            "support": {
+                "source": "https://github.com/zoho/zcrm-php-sdk/tree/master"
+            },
+            "time": "2020-09-03T04:45:22+00:00"
         }
     ],
     "packages-dev": [
@@ -7418,8 +7568,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3|^8.0"
+        "php": "^7.3|^8.0",
+        "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }
