@@ -107,7 +107,7 @@ return [
     | - www.zohoapis.com.cn
     |
     */
-    'api_base_url' => env('ZOHO_API_BASE_URL', 'www.zohoapis.com'),
+    'api_base_url' => env('ZOHO_API_BASE_URL', 'https://www.zohoapis.eu'),
 
     /*
     |--------------------------------------------------------------------------

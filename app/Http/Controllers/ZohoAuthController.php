@@ -54,7 +54,7 @@ class ZohoAuthController extends Controller
             $e->getMessage();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('leads');
     }
 
     private function writeTokenToFile(string $token)

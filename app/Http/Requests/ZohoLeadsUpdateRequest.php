@@ -13,7 +13,7 @@ class ZohoLeadsUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class ZohoLeadsUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'kid_name' => 'required|string|between:2,50',
+            'kid_grade' => 'required|string|between:2,30',
         ];
     }
 }

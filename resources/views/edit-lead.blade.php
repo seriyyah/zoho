@@ -31,21 +31,23 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('add-leads') }}" method="post">
+        <form action="{{ route('edit-lead') }}" method="post">
             @csrf
+            @method('put')
             <div class="form-group">
-                <label for="full_name">Full Name</label>
-                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter Full Name">
+                <label for="kid_name">Kid Name</label>
+                <input type="text" class="form-control" id="kid_name" name="kid_name" placeholder="Enter Kid Name">
             </div>
             <div class="form-group">
-                <label for="account_name">Phone Number</label>
-                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter Phone Number">
+                <label for="kid_grade">Kid Grade</label>
+                <input type="text" class="form-control" id="kid_grade" name="kid_grade" placeholder="Enter Kid Grade">
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email">
-            </div>
-            <button type="submit" class="btn btn-primary">Next</button>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+        <form action="{{ route('destroy-lead') }}" method="post">
+            @csrf
+            @method('delete')
+            <button type="submit" class="btn btn-primary">Delete Lead</button>
         </form>
     </div>
 </div>
